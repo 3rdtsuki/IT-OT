@@ -5,4 +5,4 @@ def monitor(packet):
     cnt+=1
     print(cnt)
 packet = sniff(prn=monitor,filter="tcp",store=1,timeout=5)
-wrpcap(r'C:\Users\Mika\Desktop\组会\202205\output.pcap', packet)
+wrpcap(r'output.pcap', packet)
