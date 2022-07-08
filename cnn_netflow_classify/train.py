@@ -114,5 +114,6 @@ if __name__ == "__main__":
                 accuracy = float((pred_y == test_y.data.numpy()).astype(int).sum()) / float(test_y.size(0))
                 print('Epoch: ', epoch, '| train loss: %.4f' % loss.data.numpy(), '| test accuracy: %.6f' % accuracy)
 
-    # torch.save(cnn,'cnn_minist.pkl')
+    # 保存模型
+    torch.save(cnn,'cnn_netflow.pkl')
     print('finish training')
