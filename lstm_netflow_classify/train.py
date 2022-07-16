@@ -6,17 +6,17 @@ import matplotlib.pyplot as plt
 import torch.utils.data as Data
 
 
-# Define LSTM Neural Networks
+# LSTM结构
 class LSTM(nn.Module):
     """
         Parameters：
-        - input_size: feature size
-        - hidden_size: number of hidden units
-        - output_size: number of output
-        - num_layers: layers of LSTM to stack
+        - input_size: feature size，输入特征数
+        - hidden_size: number of hidden units，一个隐藏层的神经元数，即h_t的维度，一般是2的n次幂
+        - output_size: number of output，输出特征数
+        - num_layers: layers of LSTM to stack，隐藏层数，1~2
     """
 
-    def __init__(self, input_size, hidden_size=1, output_size=1, num_layers=1):
+    def __init__(self, input_size, hidden_size=16, output_size=1, num_layers=1):
         super().__init__()
 
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers)  # utilize the LSTM model in torch.nn
@@ -55,7 +55,7 @@ if __name__ == '__main__':
     INPUT_FEATURES_NUM = 16
     OUTPUT_FEATURES_NUM = 6
     EPOCH = 100
-    BATCH_SIZE = len(train_x) # 注意：输入lstm的序列是训练集的所有流量，所以batch_size = len(训练集)
+    BATCH_SIZE = len(train_x)  # 注意：输入lstm的序列是训练集的所有流量，所以batch_size = len(训练集)
     LR = 0.001
 
     train_data = Data.TensorDataset(train_x, train_y)
@@ -64,7 +64,7 @@ if __name__ == '__main__':
     lstm = LSTM(input_size=INPUT_FEATURES_NUM,
                 hidden_size=16,
                 output_size=OUTPUT_FEATURES_NUM,
-                num_layers=1)  # 16 hidden units
+                num_layers=1)
     print('LSTM model:', lstm)
 
     loss_func = nn.CrossEntropyLoss()
