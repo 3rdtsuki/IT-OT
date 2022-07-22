@@ -23,9 +23,9 @@ class LSTM(nn.Module):
         self.forwardCalculation = nn.Linear(hidden_size, output_size)
 
     def forward(self, _x):
-        _x = _x.float()  # _x is input, size (seq_len, batch, input_size)
+        _x = _x.float()  # _x is input, size (batch_num, seq_len, input_size)
         x, _ = self.lstm(_x)
-        s, b, h = x.shape  # x is output, size (seq_len, batch, hidden_size)
+        s, b, h = x.shape  # x is output, size (batch_num, seq_len, hidden_size)
         x = x.view(s * b, h)
         x = self.forwardCalculation(x)
         x = x.view(s, b, -1)
