@@ -24,7 +24,7 @@ def random_divide_dataset(x_data, y_data, k):
 class CNN(nn.Module):
     # cnn结构
     def __init__(self):
-        out_channels_1 = 16  # 第一次卷积的卷积核边长
+        out_channels_1 = 16  # 第一次卷积的卷积核数量
         conv1_outsize = 2  # 第一次池化后的图的边长
         out_channels_2 = 32
         conv2_outsize = 1
@@ -101,6 +101,8 @@ if __name__ == "__main__":
         # 每个batch
         for step, (b_x, b_y) in enumerate(train_loader):
             output = cnn(b_x)
+            b_y = b_y.float()
+            # print(output.size(), b_y.size())  # torch.Size([50, 6]) torch.Size([50, 6])
             loss = loss_func(output, b_y)
 
             optimizer.zero_grad()
@@ -110,10 +112,16 @@ if __name__ == "__main__":
             # 如果循环50次，则进行一次测试
             if step % 50 == 0:
                 test_output = cnn(test_x)
-                pred_y = torch.max(test_output, 1)[1].data.numpy()
-                accuracy = float((pred_y == test_y.data.numpy()).astype(int).sum()) / float(test_y.size(0))
+                pred_y = torch.max(test_output, 1)[1].data.numpy()  # 获得6维向量的最大维度作为标签
+                test_y_labels = torch.max(test_y, 1)[1].data.numpy()
+                test_len = test_y.size(0)
+                cnt = 0
+                for i in range(test_len):
+                    if pred_y[i] == test_y_labels[i]:
+                        cnt += 1
+                accuracy = cnt / test_len
                 print('Epoch: ', epoch, '| train loss: %.4f' % loss.data.numpy(), '| test accuracy: %.6f' % accuracy)
 
     # 保存模型
-    torch.save(cnn,'cnn_netflow.pkl')
+    torch.save(cnn, 'cnn_netflow.pkl')
     print('finish training')

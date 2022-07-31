@@ -3,6 +3,7 @@ import torch.nn as nn
 import numpy as np
 import train
 
+
 class CNN(nn.Module):
     # cnn结构
     def __init__(self):
@@ -53,7 +54,8 @@ class CNN(nn.Module):
         out = self.output(out)
         return out
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     dataset = np.load('dataset.npz')
     x_data = dataset['x']
     y_data = dataset['y']
@@ -66,18 +68,16 @@ if __name__=="__main__":
 
     cnn = torch.load('cnn_netflow.pkl')
 
-    test_output = cnn(test_x[:20])
+    test_output = cnn(test_x)
     pred_y = torch.max(test_output, 1)[1].data.numpy()
+    test_y_labels = torch.max(test_y, 1)[1].data.numpy()
+    print(pred_y[:20], 'prediction number')
+    print(test_y_labels[:20], 'real number')
 
-    # info = torch.max(test_output,1)[1]
-    # print(test_output)
-    # print(info)
-
-    print(pred_y, 'prediction number')
-    print(test_y[:20].numpy(), 'real number')
-
-
-    test_output1 = cnn(test_x)
-    pred_y1 = torch.max(test_output1, 1)[1].data.numpy()
-    accuracy = float((pred_y1 == test_y.data.numpy()).astype(int).sum()) / float(test_y.size(0))
-    print('accuracy',accuracy)
+    test_len = test_y.size(0)
+    cnt = 0
+    for i in range(test_len):
+        if pred_y[i] == test_y_labels[i]:
+            cnt += 1
+    accuracy = cnt / test_len
+    print('accuracy', accuracy)
